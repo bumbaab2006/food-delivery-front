@@ -8,9 +8,12 @@ export default function CategoryModal({ onClose, onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post("http://localhost:999/food-menu", {
-      categoryName,
-    });
+    await axios.post(
+      "https://food-delivery-back-1-cev0.onrender.com/food-menu",
+      {
+        categoryName,
+      }
+    );
     onSuccess();
     onClose();
   };

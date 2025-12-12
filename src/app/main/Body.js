@@ -11,15 +11,19 @@ export default function MainPageBody({ cart, setCart }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const fetchCategories = () => {
-    axios.get("http://localhost:999/food-menu").then((res) => {
-      setCategories(res.data);
-    });
+    axios
+      .get("https://food-delivery-back-1-cev0.onrender.com/food-menu")
+      .then((res) => {
+        setCategories(res.data);
+      });
   };
 
   const fetchProducts = () => {
-    axios.get("http://localhost:999/products").then((res) => {
-      setProducts(res.data);
-    });
+    axios
+      .get("https://food-delivery-back-1-cev0.onrender.com/products")
+      .then((res) => {
+        setProducts(res.data);
+      });
   };
 
   useEffect(() => {

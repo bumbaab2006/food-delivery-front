@@ -17,10 +17,13 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:999/users/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://food-delivery-back-1-cev0.onrender.com/users/login",
+        {
+          email,
+          password,
+        }
+      );
       console.log("login console", response.data);
 
       if (response.data.loggedIn) {

@@ -24,7 +24,7 @@ export default function Step2({ email, goBack }) {
 
   //   try {
   //     const response = await axios.post(
-  //       "http://localhost:999/users",
+  //       "https://food-delivery-back-1-cev0.onrender.com/users",
   //       {
   //         email,
   //         password,
@@ -49,7 +49,7 @@ export default function Step2({ email, goBack }) {
 
     try {
       const response = await axios.post(
-        "http://localhost:999/users/signup",
+        "https://food-delivery-back-1-cev0.onrender.com/users/signup",
         { email, password },
         { headers: { "Content-Type": "application/json" } }
       );

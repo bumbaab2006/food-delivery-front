@@ -71,20 +71,23 @@ export default function Header({ cart, setCart }) {
         0
       );
 
-      await axios.post("http://localhost:999/order-foods", {
-        user: {
-          id: user.id,
-          email: user.email,
-        },
-        foodItems: cart.map((i) => ({
-          foodId: i._id,
-          name: i.name,
-          quantity: i.quantity,
-          price: i.price,
-        })),
-        totalPrice,
-        deliveryLocation: location,
-      });
+      await axios.post(
+        "https://food-delivery-back-1-cev0.onrender.com/order-foods",
+        {
+          user: {
+            id: user.id,
+            email: user.email,
+          },
+          foodItems: cart.map((i) => ({
+            foodId: i._id,
+            name: i.name,
+            quantity: i.quantity,
+            price: i.price,
+          })),
+          totalPrice,
+          deliveryLocation: location,
+        }
+      );
 
       alert("Order saved successfully!");
       setCart([]);

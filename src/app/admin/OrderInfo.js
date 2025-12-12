@@ -40,7 +40,7 @@ export default function OrderInfo() {
   // 🟩 Fetch orders (with optional date filter)
   const fetchOrders = async () => {
     try {
-      let url = "http://localhost:999/order-foods";
+      let url = "https://food-delivery-back-1-cev0.onrender.com/order-foods";
 
       if (dateRange.from && dateRange.to) {
         const start = dateRange.from.toISOString().slice(0, 10);
@@ -91,9 +91,12 @@ export default function OrderInfo() {
     try {
       await Promise.all(
         selectedOrders.map((id) =>
-          axios.put(`http://localhost:999/order-foods/${id}/status`, {
-            status: deliveryState,
-          })
+          axios.put(
+            `https://food-delivery-back-1-cev0.onrender.com/order-foods/${id}/status`,
+            {
+              status: deliveryState,
+            }
+          )
         )
       );
 

@@ -21,14 +21,14 @@ export default function FoodMenu() {
 
   const fetchCategories = () => {
     axios
-      .get("http://localhost:999/food-menu")
+      .get("https://food-delivery-back-1-cev0.onrender.com/food-menu")
       .then((res) => setCategories(res.data))
       .catch(console.log);
   };
 
   const fetchProducts = () => {
     axios
-      .get("http://localhost:999/products")
+      .get("https://food-delivery-back-1-cev0.onrender.com/products")
       .then((res) => setProducts(res.data))
       .catch(console.log);
   };
@@ -54,7 +54,9 @@ export default function FoodMenu() {
 
   const confirmDelete = () => {
     axios
-      .delete(`http://localhost:999/products/${deleteConfirm}`)
+      .delete(
+        `https://food-delivery-back-1-cev0.onrender.com/products/${deleteConfirm}`
+      )
       .then(() => {
         fetchProducts();
         setDeleteConfirm(null);

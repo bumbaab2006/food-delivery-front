@@ -63,7 +63,7 @@ export default function Home() {
 //         0
 //       );
 
-//       await axios.post("http://localhost:999/order-foods", {
+//       await axios.post("https://food-delivery-back-1-cev0.onrender.com/order-foods", {
 //         foodItems: cart.map((i) => ({
 //           foodId: i._id,
 //           name: i.name,
@@ -145,13 +145,13 @@ export default function Home() {
 //   const [selectedProduct, setSelectedProduct] = useState(null);
 
 //   const fetchCategories = () => {
-//     axios.get("http://localhost:999/food-menu").then((res) => {
+//     axios.get("https://food-delivery-back-1-cev0.onrender.com/food-menu").then((res) => {
 //       setCategories(res.data);
 //     });
 //   };
 
 //   const fetchProducts = () => {
-//     axios.get("http://localhost:999/products").then((res) => {
+//     axios.get("https://food-delivery-back-1-cev0.onrender.com/products").then((res) => {
 //       setProducts(res.data);
 //     });
 //   };

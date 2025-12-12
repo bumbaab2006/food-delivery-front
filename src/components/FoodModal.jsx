@@ -72,11 +72,14 @@ export default function FoodModal({
 
       if (editProduct) {
         await axios.put(
-          `http://localhost:999/products/${editProduct._id}`,
+          `https://food-delivery-back-1-cev0.onrender.com/products/${editProduct._id}`,
           productData
         );
       } else {
-        await axios.post("http://localhost:999/products", productData);
+        await axios.post(
+          "https://food-delivery-back-1-cev0.onrender.com/products",
+          productData
+        );
       }
 
       onSuccess();
