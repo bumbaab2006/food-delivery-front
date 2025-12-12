@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Logo from "../_icons/logo";
 import LocationIcon from "../_icons/LocationIcon";
 import ShoppingIcon from "../_icons/ShoppingIcon";
@@ -11,24 +11,32 @@ import axios from "axios";
 
 export default function Header({ cart, setCart }) {
   const [showCart, setShowCart] = useState(false);
-  const [deliveryLocation, setDeliveryLocation] = useState(""); // 🟢 state lifting
+  const [deliveryLocation, setDeliveryLocation] = useState("");
 
-  const token = localStorage.getItem("token");
+  const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
 
-  function decodeToken(token) {
-    if (!token) return null;
-    try {
-      const payload = token.split(".")[1];
-      return JSON.parse(atob(payload));
-    } catch (err) {
-      console.error("Invalid token", err);
-      return null;
+  // --------------------------
+  // 🟢 localStorage зөвхөн browser дээр унших
+  // --------------------------
+  useEffect(() => {
+    const t =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    setToken(t);
+
+    if (t) {
+      try {
+        const payload = t.split(".")[1];
+        setUser(JSON.parse(atob(payload)));
+      } catch (err) {
+        console.error("Invalid token", err);
+      }
     }
-  }
+  }, []);
 
-  const user = decodeToken(token);
-
-  // Increase quantity
+  // --------------------------
+  // 🟢 Cart functions
+  // --------------------------
   const increaseQty = (id) => {
     setCart((prev) =>
       prev.map((item) =>
@@ -37,7 +45,6 @@ export default function Header({ cart, setCart }) {
     );
   };
 
-  // Decrease quantity
   const decreaseQty = (id) => {
     setCart((prev) =>
       prev.map((item) =>
@@ -48,18 +55,19 @@ export default function Header({ cart, setCart }) {
     );
   };
 
-  // Remove item
   const removeItem = (id) => {
     setCart((prev) => prev.filter((item) => item._id !== id));
   };
 
-  // Confirm Order
-  // Confirm Order
+  // --------------------------
+  // 🟢 Confirm Order
+  // --------------------------
   const confirmOrder = async (location) => {
     if (!user?.id) {
       alert("Please login first!");
       return;
     }
+
     if (!location) {
       alert("Please enter delivery location!");
       return;
@@ -99,7 +107,6 @@ export default function Header({ cart, setCart }) {
     }
   };
 
-  console.log("user", user);
   return (
     <div className="flex flex-col w-full">
       <header className="flex items-center justify-between w-full h-16 px-20 bg-black">
@@ -112,7 +119,7 @@ export default function Header({ cart, setCart }) {
               Delivery address:
             </p>
             <p className="text-gray-500 text-xs font-normal leading-4">
-              {deliveryLocation || "Add Location"} {/* 🟢 Display location */}
+              {deliveryLocation || "Add Location"}
             </p>
             <AddresRightChevronIcon />
           </button>
@@ -143,8 +150,8 @@ export default function Header({ cart, setCart }) {
         onDecrease={decreaseQty}
         onRemove={removeItem}
         onCheckout={confirmOrder}
-        deliveryLocation={deliveryLocation} // 🟢 pass state
-        setDeliveryLocation={setDeliveryLocation} // 🟢 pass setter
+        deliveryLocation={deliveryLocation}
+        setDeliveryLocation={setDeliveryLocation}
       />
     </div>
   );
