@@ -8,6 +8,7 @@ import MainLogo from "../_icons/mainLogo";
 import FoodMenuDashboardIcon from "../_icons/FoodMenuDashboardIcon";
 import OrderTruckIcon from "../_icons/Order-TruckIcon";
 import { useRouter } from "next/navigation";
+import { getStoredRole } from "@/lib/auth";
 
 export default function AdminPage() {
   const [role, setRole] = useState(null);
@@ -15,12 +16,16 @@ export default function AdminPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const storedRole = localStorage.getItem("role");
-    setRole(storedRole);
+    const frameId = window.requestAnimationFrame(() => {
+      const storedRole = getStoredRole();
+      setRole(storedRole);
 
-    if (storedRole !== "admin") {
-      router.push("/main");
-    }
+      if (storedRole !== "admin") {
+        router.replace("/main");
+      }
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
   }, [router]);
 
   if (role === null) {

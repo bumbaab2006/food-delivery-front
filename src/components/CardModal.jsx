@@ -16,8 +16,8 @@ export default function CartModal({
   onDecrease,
   onRemove,
   onCheckout,
-  deliveryLocation, // 🟢 from header
-  setDeliveryLocation, // 🟢 from header
+  deliveryLocation, 
+  setDeliveryLocation, 
 }) {
   const itemsTotal = cart.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -31,16 +31,18 @@ export default function CartModal({
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent
           side="right"
-          className="w-[420px] p-6 overflow-y-auto bg-[#2e2e2e] text-white"
+          className="w-full max-w-[420px] overflow-y-auto border-l border-[#3b2920] bg-[#20150f] p-6 text-white"
         >
           <SheetHeader className="flex flex-row justify-between items-center mb-4">
-            <SheetTitle className="text-xl font-semibold flex items-center gap-2">
-              🛒 Order detail
+            <SheetTitle className="flex items-center gap-2 text-xl font-semibold">
+              Order detail
             </SheetTitle>
           </SheetHeader>
 
           <div className="flex flex-col items-center justify-center h-full mt-20">
-            <p className="text-gray-400">Your cart is currently empty.</p>
+            <p className="text-center text-white/62">
+              Your cart is currently empty.
+            </p>
           </div>
         </SheetContent>
       </Sheet>
@@ -51,19 +53,19 @@ export default function CartModal({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="w-[420px] p-6 overflow-y-auto bg-[#2e2e2e] text-white"
+        className="w-full max-w-[420px] overflow-y-auto border-l border-[#3b2920] bg-[#20150f] p-6 text-white"
       >
         <SheetHeader className="flex flex-row justify-between items-center mb-4">
-          <SheetTitle className="text-xl font-semibold flex items-center gap-2">
-            🛒 Order detail
+          <SheetTitle className="flex items-center gap-2 text-xl font-semibold">
+            Order detail
           </SheetTitle>
         </SheetHeader>
 
-        <div className="flex mb-6 bg-[#1f1f1f] rounded-full p-1">
-          <button className="w-1/2 py-2 rounded-full bg-red-500 text-center font-medium">
+        <div className="mb-6 flex rounded-full bg-white/8 p-1">
+          <button className="w-1/2 rounded-full bg-[#ef4444] py-2 text-center text-sm font-medium">
             Cart
           </button>
-          <button className="w-1/2 py-2 text-center text-gray-300">
+          <button className="w-1/2 py-2 text-center text-sm text-white/62">
             Order
           </button>
         </div>
@@ -72,7 +74,10 @@ export default function CartModal({
 
         <div className="space-y-6">
           {cart.map((item) => (
-            <div key={item._id} className="flex gap-4">
+            <div
+              key={item._id}
+              className="flex gap-4 rounded-[24px] border border-white/8 bg-white/6 p-4"
+            >
               <img
                 src={item.image}
                 alt={item.name}
@@ -80,20 +85,20 @@ export default function CartModal({
               />
 
               <div className="flex-1">
-                <p className="font-semibold text-red-300">{item.name}</p>
-                <p className="text-sm text-gray-300">{item.description}</p>
+                <p className="font-semibold text-[#ffd2b0]">{item.name}</p>
+                <p className="text-sm text-white/62">{item.description}</p>
 
                 <div className="flex items-center gap-3 mt-2">
                   <button
                     onClick={() => onDecrease(item._id)}
-                    className="px-2 py-1 bg-[#1f1f1f] rounded"
+                    className="rounded-full bg-white/8 px-2 py-1"
                   >
                     –
                   </button>
                   <span>{item.quantity}</span>
                   <button
                     onClick={() => onIncrease(item._id)}
-                    className="px-2 py-1 bg-[#1f1f1f] rounded"
+                    className="rounded-full bg-white/8 px-2 py-1"
                   >
                     +
                   </button>
@@ -114,13 +119,13 @@ export default function CartModal({
           <input
             type="text"
             placeholder="Please share your complete address"
-            value={deliveryLocation} // 🟢 bind to header state
-            onChange={(e) => setDeliveryLocation(e.target.value)} // 🟢 update header
-            className="w-full bg-transparent border border-gray-600 rounded-xl px-4 py-3 text-white placeholder-gray-400"
+            value={deliveryLocation}
+            onChange={(e) => setDeliveryLocation(e.target.value)}
+            className="w-full rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-white placeholder:text-white/36"
           />
         </div>
 
-        <div className="mt-8 bg-[#1f1f1f] rounded-2xl p-4 text-sm">
+        <div className="mt-8 rounded-[28px] bg-white/8 p-4 text-sm">
           <h3 className="font-semibold text-lg mb-4">Payment info</h3>
 
           <div className="flex justify-between mb-2">
@@ -143,12 +148,12 @@ export default function CartModal({
           <button
             onClick={() => {
               if (!deliveryLocation) {
-                alert("Please enter delivery location!");
+                alert("Please enter a delivery location.");
                 return;
               }
               onCheckout(deliveryLocation);
             }}
-            className="w-full bg-red-500 text-white py-3 rounded-xl mt-4 font-semibold"
+            className="mt-4 w-full rounded-2xl bg-[#ef4444] py-3 font-semibold text-white"
           >
             Checkout
           </button>

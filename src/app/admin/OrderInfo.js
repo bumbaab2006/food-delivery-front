@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import {
   Table,
   TableBody,
@@ -23,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { api } from "@/lib/api";
 
 export default function OrderInfo() {
   const [orders, setOrders] = useState([]);
@@ -31,48 +31,51 @@ export default function OrderInfo() {
   const [deliveryState, setDeliveryState] = useState("pending");
   const [open, setOpen] = useState(false);
 
-  // 🟦 Date filter state
   const [dateRange, setDateRange] = useState({
     from: null,
     to: null,
   });
 
-  // 🟩 Fetch orders (with optional date filter)
-  const fetchOrders = async () => {
-    try {
-      let url = "https://food-delivery-back-1-cev0.onrender.com/order-foods";
-
-      if (dateRange.from && dateRange.to) {
-        const start = dateRange.from.toISOString().slice(0, 10);
-        const end = dateRange.to.toISOString().slice(0, 10);
-        url += `?start=${start}&end=${end}`;
-      }
-
-      const res = await axios.get(url);
-      setOrders(res.data);
-    } catch (error) {
-      console.log("Order fetch error:", error);
-    }
-  };
-
-  // Fetch when page loads and whenever dateRange changes
   useEffect(() => {
-    fetchOrders();
+    let cancelled = false;
+
+    const loadOrders = async () => {
+      try {
+        const params =
+          dateRange.from && dateRange.to
+            ? {
+                start: dateRange.from.toISOString().slice(0, 10),
+                end: dateRange.to.toISOString().slice(0, 10),
+              }
+            : undefined;
+
+        const res = await api.get("/order-foods", { params });
+
+        if (!cancelled) {
+          setOrders(res.data);
+        }
+      } catch (error) {
+        console.log("Order fetch error:", error);
+      }
+    };
+
+    loadOrders();
+
+    return () => {
+      cancelled = true;
+    };
   }, [dateRange]);
 
-  // Toggle food dropdown
   const toggleRow = (id) => {
     setExpandedRow(expandedRow === id ? null : id);
   };
 
-  // Checkbox toggle
   const toggleSelect = (id) => {
     setSelectedOrders((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
-  // UI Status color
   const getStatusColor = (status) => {
     switch (status) {
       case "pending":
@@ -86,23 +89,19 @@ export default function OrderInfo() {
     }
   };
 
-  // Save new status
   const updateStatus = async () => {
     try {
       await Promise.all(
         selectedOrders.map((id) =>
-          axios.put(
-            `https://food-delivery-back-1-cev0.onrender.com/order-foods/${id}/status`,
-            {
-              status: deliveryState,
-            }
-          )
+          api.put(`/order-foods/${id}/status`, {
+            status: deliveryState,
+          })
         )
       );
-
-      await fetchOrders();
       setSelectedOrders([]);
       setOpen(false);
+      const refreshed = await api.get("/order-foods");
+      setOrders(refreshed.data);
     } catch (error) {
       console.log("Status update error:", error);
     }
@@ -111,7 +110,6 @@ export default function OrderInfo() {
   return (
     <div className="p-10 w-full">
       <div className="border rounded-2xl p-6 bg-white shadow-sm">
-        {/* HEADER */}
         <div className="flex justify-between items-center mb-4">
           <div>
             <h2 className="text-xl font-bold">Orders</h2>
@@ -119,10 +117,8 @@ export default function OrderInfo() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* 🟧 Date Range Picker */}
             <DateRangePicker value={dateRange} onChange={setDateRange} />
 
-            {/* Change delivery state */}
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
                 <Button
@@ -180,7 +176,6 @@ export default function OrderInfo() {
           </div>
         </div>
 
-        {/* TABLE */}
         <Table>
           <TableHeader>
             <TableRow>

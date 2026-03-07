@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import FoodModal from "@/components/FoodModal";
 import CategoryModal from "@/components/CategoryModal";
 import { Pencil, Trash } from "lucide-react";
 import RedAddIcon from "../_icons/redAddIcon";
+import { api } from "@/lib/api";
 
 export default function FoodMenu() {
   const [categories, setCategories] = useState([]);
@@ -20,15 +20,15 @@ export default function FoodMenu() {
   const categoryRefs = useRef({});
 
   const fetchCategories = () => {
-    axios
-      .get("https://food-delivery-back-1-cev0.onrender.com/food-menu")
+    api
+      .get("/food-menu")
       .then((res) => setCategories(res.data))
       .catch(console.log);
   };
 
   const fetchProducts = () => {
-    axios
-      .get("https://food-delivery-back-1-cev0.onrender.com/products")
+    api
+      .get("/products")
       .then((res) => setProducts(res.data))
       .catch(console.log);
   };
@@ -53,10 +53,8 @@ export default function FoodMenu() {
   const handleDelete = (id) => setDeleteConfirm(id);
 
   const confirmDelete = () => {
-    axios
-      .delete(
-        `https://food-delivery-back-1-cev0.onrender.com/products/${deleteConfirm}`
-      )
+    api
+      .delete(`/products/${deleteConfirm}`)
       .then(() => {
         fetchProducts();
         setDeleteConfirm(null);
@@ -126,6 +124,7 @@ export default function FoodMenu() {
                 >
                   <img
                     src={product.image || "/food_placeholder.png"}
+                    alt={product.name}
                     className="w-full h-48 object-cover rounded-t-xl"
                   />
 

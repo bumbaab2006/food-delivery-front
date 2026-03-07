@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { api } from "@/lib/api";
 
 export default function FoodModal({
   categories,
@@ -21,14 +21,12 @@ export default function FoodModal({
   const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // selectedCategory → Modal нээгдэх бүрт category-г автоматаар тохируулна
   useEffect(() => {
     if (!editProduct && selectedCategory) {
       setCategory(selectedCategory);
     }
   }, [selectedCategory, editProduct]);
 
-  // Cloudinary upload
   const uploadImageToCloudinary = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
@@ -51,7 +49,6 @@ export default function FoodModal({
     }
   };
 
-  // Save Product
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -71,15 +68,9 @@ export default function FoodModal({
       };
 
       if (editProduct) {
-        await axios.put(
-          `https://food-delivery-back-1-cev0.onrender.com/products/${editProduct._id}`,
-          productData
-        );
+        await api.put(`/products/${editProduct._id}`, productData);
       } else {
-        await axios.post(
-          "https://food-delivery-back-1-cev0.onrender.com/products",
-          productData
-        );
+        await api.post("/products", productData);
       }
 
       onSuccess();
@@ -125,7 +116,6 @@ export default function FoodModal({
             required
           />
 
-          {/* CATEGORY SELECT */}
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
@@ -139,7 +129,6 @@ export default function FoodModal({
             ))}
           </select>
 
-          {/* IMAGE INPUT */}
           <input
             type="file"
             accept="image/*"

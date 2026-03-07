@@ -1,43 +1,65 @@
 import Logo from "../_icons/logo";
+
+const links = ["Home", "Contact us", "Delivery zone"];
+const extras = ["Top dishes", "Featured restaurants", "Fast checkout"];
+
 export default function Footer() {
   return (
-    <div className="h-[755px] self-stretch bg-[#18181B]">
-      {/* header container */}
-      <div className="flex w-full py-7 px-[98px] items-center gap-[34px] bg-[#EF4444]">
-        <h2 className="text-white font-Inter text-[30px] font-semibold leading-9 tracking-[-0.75px]">
-          Fresh fast Delivered
-        </h2>
+    <footer className="mt-20 w-full bg-[#18120d] text-white">
+      <div className="bg-[#ef4444] px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-[1320px] flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-3xl [font-family:var(--font-fraunces)]">
+            Fresh, fast, delivered.
+          </h2>
+          <p className="text-sm text-white/82">
+            Built for warm visuals and a direct ordering flow.
+          </p>
+        </div>
       </div>
-      {/* content container */}
-      <div className="flex w-[1264px] items-start gap-[220px]">
-        <Logo />
-        <div className="flex items-start gap-28">
-          <div className="flex flex-col items-start w-[122px] gap-4">
-            <p className="text-gray-500 text-base font-normal leading-7 self-stretch">
-              NOMNOM
-            </p>
-            <p className="text-white text-base font-normal leading-6 self-stretch">
-              Home
-            </p>
-            <p className="text-white text-base font-normal leading-6 self-stretch">
-              Contact us
-            </p>
-            <p className="text-white text-base font-normal leading-6 self-stretch">
-              Delivery zone
-            </p>
-          </div>
-          <div className="flex items-start gap-14">
-            <div className="flex flex-col items-start gap-4 w-[132px]">
-              <p className="text-gray-500 font-inter text-base font-normal leading-7 self-stretch">
-                MENU
-              </p>
-              <p className="text-white font-inter text-base font-normal leading-6 self-stretch">
-                Your text here
+
+      <div className="mx-auto grid max-w-[1320px] gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.2fr_0.8fr_0.8fr] lg:px-8">
+        <div className="space-y-5">
+          <div className="flex items-center gap-4">
+            <Logo />
+            <div>
+              <p className="text-lg font-semibold">NomNom</p>
+              <p className="text-xs uppercase tracking-[0.32em] text-white/50">
+                Swift delivery
               </p>
             </div>
           </div>
+          <p className="max-w-md text-sm leading-7 text-white/68">
+            A food delivery experience focused on clear actions, responsive
+            layout, and a warmer visual system.
+          </p>
+        </div>
+
+        <div>
+          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-white/42">
+            NomNom
+          </p>
+          <div className="space-y-3">
+            {links.map((item) => (
+              <p key={item} className="text-sm text-white/78">
+                {item}
+              </p>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-white/42">
+            Highlights
+          </p>
+          <div className="space-y-3">
+            {extras.map((item) => (
+              <p key={item} className="text-sm text-white/78">
+                {item}
+              </p>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 }

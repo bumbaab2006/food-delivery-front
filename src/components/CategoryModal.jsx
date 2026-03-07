@@ -1,19 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
+import { api } from "@/lib/api";
 
 export default function CategoryModal({ onClose, onSuccess }) {
   const [categoryName, setCategoryName] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post(
-      "https://food-delivery-back-1-cev0.onrender.com/food-menu",
-      {
-        categoryName,
-      }
-    );
+    await api.post("/food-menu", {
+      categoryName,
+    });
     onSuccess();
     onClose();
   };
