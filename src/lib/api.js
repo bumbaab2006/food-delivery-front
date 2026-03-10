@@ -16,8 +16,26 @@ export const resolveApiUrl = (path = "") => {
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 15000,
+  timeout: 30000,
   headers: {
     "Content-Type": "application/json",
   },
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const shouldRetry =
+      error.config &&
+      error.config.method === "get" &&
+      !error.config.__retried &&
+      ["ECONNABORTED", "ERR_NETWORK"].includes(error.code);
+
+    if (!shouldRetry) {
+      return Promise.reject(error);
+    }
+
+    error.config.__retried = true;
+    return api(error.config);
+  }
+);

@@ -15,6 +15,7 @@ export default function MainPageBody({ cart, setCart }) {
   const [activeCategory, setActiveCategory] = useState("all");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,14 +32,20 @@ export default function MainPageBody({ cart, setCart }) {
         setProducts(productsResponse.data);
       } catch (error) {
         console.error("Menu fetch error", error);
-        setErrorMessage("Unable to load the menu right now.");
+        if (["ECONNABORTED", "ERR_NETWORK"].includes(error.code)) {
+          setErrorMessage(
+            "Menu ачаалж чадсангүй. Backend service удаан сэрж байгаа эсвэл одоогоор ажиллахгүй байна."
+          );
+        } else {
+          setErrorMessage("Menu ачаалж чадсангүй. Дахин оролдоно уу.");
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [refreshKey]);
 
   const grouped = useMemo(
     () =>
@@ -141,7 +148,14 @@ export default function MainPageBody({ cart, setCart }) {
 
         {errorMessage && (
           <div className="rounded-[30px] border border-[#fecaca] bg-[#fff1f2] p-6 text-[#b42318]">
-            {errorMessage}
+            <p>{errorMessage}</p>
+            <button
+              type="button"
+              onClick={() => setRefreshKey((value) => value + 1)}
+              className="mt-4 rounded-full bg-[#20150f] px-4 py-2 text-sm font-semibold text-white"
+            >
+              Дахин оролдох
+            </button>
           </div>
         )}
 
