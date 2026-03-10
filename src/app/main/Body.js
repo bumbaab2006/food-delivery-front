@@ -64,6 +64,8 @@ export default function MainPageBody({ cart, setCart }) {
     return grouped.filter((item) => item._id === activeCategory);
   }, [activeCategory, grouped]);
 
+  const hasMenuData = categories.length > 0 || products.length > 0;
+
   return (
     <div
       id="menu"
@@ -159,8 +161,22 @@ export default function MainPageBody({ cart, setCart }) {
           </div>
         )}
 
+        {!loading && !errorMessage && !hasMenuData && (
+          <div className="rounded-[30px] border border-[#ecd9cb] bg-white/88 p-10 text-center text-[#7a6252]">
+            <p className="text-lg font-semibold text-[#20150f]">
+              Menu хоосон байна.
+            </p>
+            <p className="mt-2 text-sm leading-6">
+              Live database дээр `food categories` эсвэл `products` өгөгдөл
+              алга байна. Admin panel-оос дахин үүсгэх эсвэл зөв database руу
+              холбогдсон эсэхээ шалгана уу.
+            </p>
+          </div>
+        )}
+
         {!loading &&
           !errorMessage &&
+          hasMenuData &&
           visibleGroups.map((cat) => (
             <section key={cat._id} className="space-y-5">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
