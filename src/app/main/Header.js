@@ -29,6 +29,7 @@ export default function Header({ cart, setCart }) {
   const router = useRouter();
   const [showCart, setShowCart] = useState(false);
   const [deliveryLocation, setDeliveryLocation] = useState("");
+  const [savedLocations, setSavedLocations] = useState([]);
   const [user, setUser] = useState(null);
   const [role, setRole] = useState(null);
 
@@ -36,10 +37,33 @@ export default function Header({ cart, setCart }) {
     const frameId = window.requestAnimationFrame(() => {
       setUser(getCurrentUserFromStorage());
       setRole(getStoredRole());
+      setDeliveryLocation(localStorage.getItem("nomnom-delivery-location") || "");
+
+      try {
+        const storedLocations = JSON.parse(
+          localStorage.getItem("nomnom-saved-locations") || "[]"
+        );
+        setSavedLocations(
+          Array.isArray(storedLocations) ? storedLocations.slice(0, 5) : []
+        );
+      } catch (_error) {
+        setSavedLocations([]);
+      }
     });
 
     return () => window.cancelAnimationFrame(frameId);
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("nomnom-delivery-location", deliveryLocation);
+  }, [deliveryLocation]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "nomnom-saved-locations",
+      JSON.stringify(savedLocations.slice(0, 5))
+    );
+  }, [savedLocations]);
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
   const cartTotal = cart.reduce(
@@ -69,6 +93,20 @@ export default function Header({ cart, setCart }) {
     setCart((prev) => prev.filter((item) => item._id !== id));
   };
 
+  const saveLocation = (location) => {
+    const normalizedLocation = location.trim();
+
+    if (!normalizedLocation) {
+      return;
+    }
+
+    setDeliveryLocation(normalizedLocation);
+    setSavedLocations((prev) => [
+      normalizedLocation,
+      ...prev.filter((item) => item !== normalizedLocation),
+    ]);
+  };
+
   const confirmOrder = async (location) => {
     if (!user?.id) {
       alert("Please log in before checking out.");
@@ -82,6 +120,7 @@ export default function Header({ cart, setCart }) {
     }
 
     try {
+      const normalizedLocation = location.trim();
       const totalPrice = cart.reduce(
         (acc, item) => acc + item.price * item.quantity,
         0
@@ -99,13 +138,13 @@ export default function Header({ cart, setCart }) {
           price: i.price,
         })),
         totalPrice,
-        deliveryLocation: location,
+        deliveryLocation: normalizedLocation,
       });
 
+      saveLocation(normalizedLocation);
       alert("Order saved successfully.");
       setCart([]);
       setShowCart(false);
-      setDeliveryLocation("");
     } catch (err) {
       console.error("Order Save Error:", err);
       alert("Failed to save order");
@@ -147,10 +186,14 @@ export default function Header({ cart, setCart }) {
           </div>
 
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-            <div className="inline-flex items-center gap-3 rounded-full border border-white/12 bg-white/10 px-4 py-3 text-sm text-white/80">
+            <button
+              type="button"
+              onClick={() => setShowCart(true)}
+              className="inline-flex items-center gap-3 rounded-full border border-white/12 bg-white/10 px-4 py-3 text-left text-sm text-white/80 hover:bg-white/16"
+            >
               <MapPin className="h-4 w-4 text-[#fb923c]" />
               <span>{deliveryLocation || "Add your delivery address"}</span>
-            </div>
+            </button>
 
             <div className="flex items-center gap-3">
               <button
@@ -285,8 +328,11 @@ export default function Header({ cart, setCart }) {
         onDecrease={decreaseQty}
         onRemove={removeItem}
         onCheckout={confirmOrder}
+        user={user}
         deliveryLocation={deliveryLocation}
         setDeliveryLocation={setDeliveryLocation}
+        savedLocations={savedLocations}
+        onSaveLocation={saveLocation}
       />
     </div>
   );
