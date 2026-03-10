@@ -136,6 +136,7 @@ export default function Header({ cart, setCart }) {
           name: i.name,
           quantity: i.quantity,
           price: i.price,
+          image: i.image,
         })),
         totalPrice,
         deliveryLocation: normalizedLocation,

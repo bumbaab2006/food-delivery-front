@@ -107,6 +107,9 @@ export default function OrderInfo() {
     }
   };
 
+  const getFoodImage = (item) =>
+    item.image || item.foodId?.image || "/food_placeholder.png";
+
   return (
     <div className="p-10 w-full">
       <div className="border rounded-2xl p-6 bg-white shadow-sm">
@@ -243,7 +246,11 @@ export default function OrderInfo() {
                       <div className="p-4 flex flex-col gap-3">
                         {order.foodItems.map((item) => (
                           <div key={item._id} className="flex gap-3">
-                            <div className="w-[55px] h-[55px] bg-gray-300 rounded-xl"></div>
+                            <img
+                              src={getFoodImage(item)}
+                              alt={item.name}
+                              className="h-[55px] w-[55px] rounded-xl object-cover"
+                            />
                             <div>
                               <p className="font-medium">{item.name}</p>
                               <p className="text-sm text-gray-500">
